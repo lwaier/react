@@ -5,6 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
+  //表示严格模式 可以在任何jsx中使用 对一部分代码进行严格模式检查
   <React.StrictMode>
     <App />
   </React.StrictMode>,
