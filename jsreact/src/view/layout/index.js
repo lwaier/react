@@ -3,10 +3,12 @@ import {Switch,Route,Redirect,Link} from 'react-router-dom'
 import Work from './../work'
 import Learn from './../learn'
 import Sleep from './../sleep'
+import store from './../../store'
+import {setName} from './../../store/actions/index'
 
-// import { createHashHistory } from 'history';
+// import {createHashHistory} from "history"
 
-// const history = createHashHistory();
+// const history = createHashHistory(); 
 
 
 export default class Layout extends React.Component{
@@ -16,7 +18,7 @@ export default class Layout extends React.Component{
             list:[
                 {name:'/work',text:'work',active:true},
                 {name:'/learn',text:'learn',active:false},
-                {name:'/sleep',text:'sleep',active:false},
+                {name:'/sleep/aa/xiaobai',text:'sleep',active:false},
             ],
             name:'lixiaobai'
         }
@@ -37,12 +39,12 @@ export default class Layout extends React.Component{
         this.setState({
             list,
         })
+
     }
     goToSleep(){
        
-        this.history.push({
-            pathname:'/sleep/aa/55?oo=1'
-        })
+        // history.push('/work')
+        store.dispatch(setName({name:'我是魔鬼伟'}))
     }
     render(){
         return(
