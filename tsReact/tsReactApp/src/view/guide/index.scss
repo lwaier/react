@@ -1,0 +1,20 @@
+.swiper-slide{
+    position: relative;
+    text-align: center;
+    .guide_one{
+        width: 80%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        font-size: 0.36rem;
+        line-height: 0.8rem;
+    }
+    .button_login{
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-left: 0px;
+    }
+}

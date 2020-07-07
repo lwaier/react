@@ -1,0 +1,64 @@
+.username,.password{
+    width: 76%;
+    margin-left: 12%;
+    padding-top: 1rem;
+    overflow: hidden;
+    div{
+        float: left;
+    }
+    div:nth-child(1){
+        height: 0.76rem;
+        line-height: 0.76rem;
+    }
+    div:nth-child(2){
+        float: right;
+    }
+    div:nth-child(3){
+        float: right;
+    }
+}
+.go_page{
+    position: absolute;
+    bottom: 0.2rem;
+    font-size: 0.16rem;
+}
+.go_left{
+    left: 0.2rem;
+}
+.go_right{
+    right: 0.2rem;
+}
+.button_login{
+    margin-top: .8rem;
+    width: 76%;
+    margin-left: 12%;
+}
+
+.code_register{
+    width: 76%;
+    margin-left: 12%;
+    padding-top: 1rem;
+    overflow: hidden;
+    div{
+        float: left;
+    }
+    div:nth-child(1){
+        height: 0.76rem;
+        line-height: 0.76rem;
+        
+    }
+    div:nth-child(2){
+        width: 30%;
+        float: right;
+    }
+    div:nth-child(3){
+        width: 40%;
+        float: right;
+        margin-right: 5%;
+    }
+}
+.get_code_button{
+    margin-right: .1rem;
+    margin-top: .08rem;
+    width: 100%;
+}

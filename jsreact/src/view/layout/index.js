@@ -3,6 +3,7 @@ import {Switch,Route,Redirect,Link} from 'react-router-dom'
 import Work from './../work'
 import Learn from './../learn'
 import Sleep from './../sleep'
+import hooks from './../hooks'
 import store from './../../store'
 import {setName} from './../../store/actions/index'
 
@@ -67,10 +68,11 @@ export default class Layout extends React.Component{
                     }
                 </ul>
                 <Switch>
-                    <Route exact path="/" render={()=><Redirect to="/work" />}></Route>
+                    <Route exact path="/" render={()=><Redirect to="/hooks" />}></Route>
                     <Route path="/work" component={Work} ></Route>
                     <Route path="/learn" component={Learn} ></Route>
                     <Route path="/sleep/aa/:id" component={Sleep} ></Route>
+                    <Route path="/hooks" component={hooks} ></Route>
                 </Switch>
             </div>
             
