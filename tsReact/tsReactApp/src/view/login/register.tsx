@@ -2,28 +2,32 @@ import React,{useRef,useState} from 'react'
 import { Input,Button, message } from 'antd';
 import { UserOutlined,EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import "./login.scss"
-import {IinputeValue} from './../../common/interface'
+import {IinputeValue,Ihistory} from './../../common/interface'
 import axios from './../../utils/ajax'
 
 
-export default (props:{history:{}})=>{
-
+export default (props:Ihistory)=>{
+    console.log(props)
     //得到用户输入的数据
-    let username = ""; //用户名
-    let password = ""; //密码
-    let usercode = ""; //code
+    let [username,setUsername] = useState(''); //用户名
+    let [password,setPassword] = useState(''); //密码
+    let [passwordNew,setPasswordNew] = useState(''); //密码
+    let [usercode,setUsercode] = useState(''); //code值
+
     const getValue = (data:IinputeValue,code:number)=>{
         data.persist()
         switch(code){
             case 0:
-                username = data.target.value;
+                setUsername(data.target.value);
             return;
             case 1:
-                password = data.target.value;
+                setPassword(data.target.value);
             return;
             case 2:
-                usercode = data.target.value;
-                console.log(usercode)
+                setUsercode(data.target.value);
+            return;
+            case 3:
+                setPasswordNew(data.target.value);
             return;
             default:
                 return ""
@@ -33,17 +37,33 @@ export default (props:{history:{}})=>{
     //用户点击注册
     const registerFn = ()=>{
         console.log(username)
-        console.log(password)
+        console.log(password,'jiumima')
         console.log(usercode)
-        if(username===''||password===''){
-            message.warning('用户名或密码为空');
+        console.log(passwordNew,'xinmima')
+        
+        if(username===""||password===""||usercode===""||passwordNew===""){
+            message.warning('用户名,密码或验证码为空');
             return;
         }
-        axios.post('/lr/register',{username,password}).then(res=>{
+        if(password!==passwordNew){
+            message.warning('确认密码不一致');
+            return;
+        }
+        axios.post('/lr/register',{username,password,usercode}).then(res=>{
             if(res.data.code === '000000'){
                 message.success('注册成功');
+                setTimeout(()=>{
+                    goToLogin('/login')
+                },1500)
             }else if(res.data.code === '000001'){
                 message.warning('该用户名已注册');
+                setTimeout(()=>{
+                    goToLogin('/login')
+                },1500)
+            }else if(res.data.code === '000003'){
+                message.warning('验证码失效');
+            }else if(res.data.code === '000004'){
+                message.warning('验证码不正确');
             }
         })
     }
@@ -55,33 +75,46 @@ export default (props:{history:{}})=>{
     let [getCodeFlag,setGetCodeFlag] = useState(true); //注册按钮是否可以点击(标量 - true可点击 false不可点击)
     //用户点击获取验证码
     const getCode = ()=>{
+
+        if(!username){
+            message.warning('用户名为空');
+            return;
+        }; 
+
         let timer:any; //定时器
-        console.log('我是魔鬼伟')
-        console.log(getCodeFlag)
+
         if(!getCodeFlag){
             return;
         }
-        setGetCodeFlag(false); //设置注册按钮为不可点击
-        timer=setInterval(()=>{
-            if(count.current<1){
-                clearInterval(timer);
-                setGetCodeFlag(true); //重置按钮为可点击
-                count.current=60
-                countSet(60)
-                timer=null;
-                return;
-            }; //当时间为0s的时候可以继续点击,此时需要清除定时器
-            count.current--;
-            countSet(count.current)
-        },100)
-        
+
+        axios.post('/lr/getCode',{username}).then(res=>{
+            if(res.data.code === '000000'){
+                message.success('发送成功');
+                setGetCodeFlag(false); //设置注册按钮为不可点击
+                timer=setInterval(()=>{
+                    if(count.current<1){
+                        clearInterval(timer);
+                        setGetCodeFlag(true); //重置按钮为可点击
+                        count.current=60
+                        countSet(60)
+                        timer=null;
+                        return;
+                    }; //当时间为0s的时候可以继续点击,此时需要清除定时器
+                    count.current--;
+                    countSet(count.current)
+                },1000)
+            }else{
+                message.error('发送失败');
+            }
+        })
+
     }
 
 
 
     const history = props.history;
     const goToLogin = (url:string)=>{
-        (history as {push:(str:string,opt?:{})=>void}).push(url)
+        history.push(url)
     }
     return(
         <div style={{height:'100vh',position:'relative'}}>
@@ -90,7 +123,7 @@ export default (props:{history:{}})=>{
                     账号: 
                 </div>
                 <div>
-                    <Input size="large" placeholder="large size" prefix={<UserOutlined />} onChange={(data)=>{getValue(data,0)}}/>
+                    <Input size="large" maxLength={11} placeholder="large size" prefix={<UserOutlined />} onChange={(data)=>{getValue(data,0)}}/>
                 </div>
             </div>
             <div className="password">
@@ -103,6 +136,20 @@ export default (props:{history:{}})=>{
                         placeholder="input password"
                         iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                         onChange={(data)=>{getValue(data,1)}}
+                    />
+                </div>
+            </div>
+
+            <div className="password">
+                <div>
+                    确认密码: 
+                </div>
+                <div>
+                    <Input.Password
+                        size="large" 
+                        placeholder="input password"
+                        iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                        onChange={(data)=>{getValue(data,3)}}
                     />
                 </div>
             </div>
@@ -119,7 +166,6 @@ export default (props:{history:{}})=>{
                 </div>
             </div> 
             <Button className="button_login" onClick={registerFn}>立即注册</Button>
-            
             <div className="go_page go_left" onClick={()=>{goToLogin('/fastlogin')}}>快速登录 {">"}</div>
             <div className="go_page go_right" onClick={()=>{goToLogin('/login')}}>密码登录 {">"}</div>
         </div>

@@ -1,0 +1,26 @@
+.route {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20%;
+    height: 100%;
+}
+ 
+// 帧动画
+.fade-enter {
+    opacity:0;
+}
+ 
+.fade-enter.fade-enter-active {
+    opacity:1;
+    transition: right 500ms ease-in;
+}
+ 
+// .fade-exit {
+//     right: 0;
+// }
+ 
+// .fade-exit.fade-exit-active {
+//     right:100%;
+//     transition: right 100ms ease-in;
+// }

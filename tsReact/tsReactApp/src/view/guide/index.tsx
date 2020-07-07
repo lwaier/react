@@ -3,11 +3,12 @@ import React,{useEffect} from 'react';
 import Swiper from "swiper";
 import './index.scss'
 import { Button } from 'antd';
+import {Ihistory} from './../../common/interface'
 
-export default (props: {history:{}})=>{
+export default (props:Ihistory)=>{
     const history = props.history;
     const goToLogin = ()=>{
-        (history as {push:(str:string,opt?:{})=>void}).push('/login')
+        history.push('/login')
     }
 
     useEffect(()=>{

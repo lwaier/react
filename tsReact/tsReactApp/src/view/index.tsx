@@ -1,23 +1,29 @@
 import React from 'react'
-import {Switch,Route,Redirect} from 'react-router-dom';
+import {Route,Redirect} from 'react-router-dom';
 import Login from './login/login'; //登录页
 import Register from './login/register'; //注册页页
 import Fastlogin from './login/fastlogin'; //快速登录页
 
 import Guide from "./guide";    //引导页
+import './index.scss'
+
+import ActiveRouter from './../components/activeRouter/activeRouter'
+
 
 
 
 export default ()=>{
     return (
         <div>
-            <Switch>
+            {/* <Switch> */}
+            <ActiveRouter>
                 <Route path="/" exact render={()=><Redirect to="/guide" /> } />
                 <Route path="/login" component={Login} />
                 <Route path="/register" component={Register} />
                 <Route path="/fastlogin" component={Fastlogin} />
                 <Route path="/guide" component={Guide} />
-            </Switch>
+            </ActiveRouter>
+            {/* </Switch> */}
         </div>
     )
 }
