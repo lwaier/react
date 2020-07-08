@@ -1,0 +1,4 @@
+ mongodump -h 127.0.0.1 -d tsReact -o ./Desktop/myDtata --导出数据库
+ mongorestore -h 127.0.0.1 -d tsReactnew  --dir ./Desktop/myDtata/tsReact	--导入数据库
+db.dropDatabase()  --进入对应数据库执行即可删除该数据库
+
