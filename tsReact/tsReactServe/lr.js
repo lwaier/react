@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router(); //得到router路由
-const {conn,setError} = require('./utils')
+const {conn,setError,keys,aesEncrypt,aesDecrypt} = require('./utils')
 const {sendCode} = require('./phoneCode/tenxunCode')
 
 let {ObjectID} = require("mongodb"); //得到创建id的方法 接受前端传入的id 使用objectID创建为数据库id 然后操作增删改查
@@ -70,7 +70,6 @@ router.get('/xiaobaig',(req,res)=>{
 })
 
 
-
 //存入用户名
 router.post('/register',(req,res)=>{
     console.log(req.body,'请求');
@@ -134,6 +133,81 @@ router.post('/register',(req,res)=>{
         }
     })
 })
+
+//登录接口
+
+router.post('/login',(req,res)=>{
+    const {username,password,miFlag,autoFlag} = req.body
+    // miFlag 是否记住密码
+    // autoFlag 是否是直接登陆
+    conn((err,db)=>{
+        setError(err,res,db);
+        db.collection('user').findOne({username},(err,result)=>{
+            setError(err,res,db);
+            if(result){
+                const passwordDb = result.password; //密码
+                const passwordMiDb = result.passwordMi; //加密后的密码
+                if(autoFlag){
+                    
+                    const date = new Date();
+                    const time = date.getTime()-result.autoDate;
+                    if(password==passwordMiDb){
+                        if(time>6*1000){
+                            //直接登陆7天失效
+                            res.json({
+                                errInfo:'距离上次密码登陆已有7天,直接登陆失效',
+                                code:'000007'
+                            }) 
+                        }else{ 
+                            res.json({
+                                code:'000000',
+                                errInfo:'登录成功',
+                            })
+                        }
+                    }else{
+                        res.json({
+                            code:'000006',
+                            errInfo:'密码错误'
+                        }) 
+                    }
+                }else{
+                    if(password == passwordDb){
+                        const passwordMi = aesEncrypt(passwordDb+'-'+new Date().getTime(),keys)
+                        if(miFlag){
+                            //如果传入记住密码则存入时间戳入数据库
+                            const autoDate = new Date().getTime(); //当前的时间戳
+                            db.collection('user').updateOne({username},{$set:{autoDate,passwordMi}},(err,result)=>{
+                                setError(err,res,db)
+                                res.json({
+                                    code:'000000',
+                                    errInfo:'登录成功',
+                                    result:miFlag?passwordMi:null, //加密的密码返回给用户(当用户点记住密码时返回)
+                                })
+                            })
+                        }else{
+                            res.json({
+                                code:'000000',
+                                errInfo:'登录成功',
+                                result:miFlag?passwordMi:null, //加密的密码返回给用户(当用户点记住密码时返回)
+                            })
+                        }
+                    }else{
+                        res.json({
+                            code:'000006',
+                            errInfo:'密码错误'
+                        })
+                    }
+                }
+            }else{
+                res.json({
+                    code:'000005',
+                    errInfo:'用户名错误'
+                })
+            }
+        })
+    })
+})
+
 
 //获取短信验证码
 router.post('/getCode',(req,res)=>{
