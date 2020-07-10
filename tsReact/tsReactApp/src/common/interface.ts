@@ -10,5 +10,8 @@ export interface Icheckbox {
 export interface Ihistory {
     history:{
         push:(str:string,opt?:{})=>void
+    },
+    location:{
+        pathname:string
     }
 }

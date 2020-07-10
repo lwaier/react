@@ -55,6 +55,13 @@ export default (props:Ihistory)=>{
                     localStorage.setItem("userInfo",JSON.stringify(userInfo))
                 }; //如果用户点击了记住密码则将密码存入localstorage
 
+                //跳转到内容页
+                if(localStorage.getItem('beforeLoginPath')){
+                    props.history.push(localStorage.getItem('beforeLoginPath') as string)
+                }else{
+                    props.history.push('/home/index')
+                }
+
             }
         })
     }

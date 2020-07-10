@@ -7,8 +7,8 @@ import {Ihistory} from './../../common/interface'
 
 export default (props:Ihistory)=>{
     const history = props.history;
-    const goToLogin = ()=>{
-        history.push('/login')
+    const goHome = ()=>{
+        history.push('/home')
     }
 
     useEffect(()=>{
@@ -48,7 +48,7 @@ export default (props:Ihistory)=>{
                             <div>入梦</div>
                             <div>一沙一世界 一叶一菩提</div>
                         </div>
-                        <Button className="button_login" onClick={()=>{goToLogin()}}>开启梦幻之旅</Button>
+                        <Button className="button_login" onClick={()=>{goHome()}}>开启梦幻之旅</Button>
                     </div>
                 </div>
                 <div className="swiper-pagination"></div>
