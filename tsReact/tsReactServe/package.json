@@ -13,7 +13,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "md5-node": "^1.0.1",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.6.1",
     "request": "^2.88.2",
     "tencentcloud-sdk-nodejs": "^3.0.203"
   }
